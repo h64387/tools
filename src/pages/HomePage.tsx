@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DateTimeToolModal } from '../components/DateTimeToolModal'
 import { JsonToolModal } from '../components/JsonToolModal'
+import { Md5ToolModal } from '../components/Md5ToolModal'
 import { SearchInput } from '../components/SearchInput'
 import { ToolCard } from '../components/ToolCard'
 import { tools } from '../data/tools'
@@ -8,6 +9,7 @@ import { tools } from '../data/tools'
 export function HomePage() {
   const [query, setQuery] = useState('')
   const [isDateTimeToolOpen, setIsDateTimeToolOpen] = useState(false)
+  const [isMd5ToolOpen, setIsMd5ToolOpen] = useState(false)
   const [isJsonToolOpen, setIsJsonToolOpen] = useState(false)
 
   const filteredTools = useMemo(() => {
@@ -71,7 +73,13 @@ export function HomePage() {
                 {filteredTools.length > 0 ? (
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     {filteredTools.map((tool) => {
-                      const openTool = tool.slug === 'date-time' ? () => setIsDateTimeToolOpen(true) : tool.slug === 'json' ? () => setIsJsonToolOpen(true) : undefined
+                      const openTool = tool.slug === 'date-time'
+                        ? () => setIsDateTimeToolOpen(true)
+                        : tool.slug === 'md5'
+                          ? () => setIsMd5ToolOpen(true)
+                          : tool.slug === 'json'
+                            ? () => setIsJsonToolOpen(true)
+                            : undefined
 
                       return <ToolCard key={tool.slug} tool={tool} onOpen={openTool} />
                     })}
@@ -108,6 +116,7 @@ export function HomePage() {
       </section>
 
       {isDateTimeToolOpen && <DateTimeToolModal onClose={() => setIsDateTimeToolOpen(false)} />}
+      {isMd5ToolOpen && <Md5ToolModal onClose={() => setIsMd5ToolOpen(false)} />}
       {isJsonToolOpen && <JsonToolModal onClose={() => setIsJsonToolOpen(false)} />}
     </div>
   )

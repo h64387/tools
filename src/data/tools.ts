@@ -18,7 +18,7 @@ export const tools: Tool[] = [
     name: 'MD5 工具',
     slug: 'md5',
     path: '/tools/md5',
-    description: 'MD5 摘要相关工具占位页',
+    description: '输入文本生成 MD5，支持大小写与 16/32 位输出',
     keywords: ['md5', '摘要', '哈希', 'hash'],
   },
   {

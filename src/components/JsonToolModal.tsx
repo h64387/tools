@@ -210,12 +210,18 @@ function tokenizeJsonOutput(source: string): JsonToken[] {
   return tokens
 }
 
+function countInputLines(value: string) {
+  return value.split('\n').length
+}
+
 export function JsonToolModal({ onClose }: JsonToolModalProps) {
   const panelRef = useRef<HTMLElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const lineNumberRef = useRef<HTMLDivElement>(null)
   const [jsonOutput, setJsonOutput] = useState('')
   const [errorDetail, setErrorDetail] = useState<ErrorDetail | null>(null)
+  const [inputLineCount, setInputLineCount] = useState(1)
   const [toast, setToast] = useState<Toast | null>(null)
   const [toastExiting, setToastExiting] = useState(false)
 
@@ -310,6 +316,12 @@ export function JsonToolModal({ onClose }: JsonToolModalProps) {
     setToast({ type, message })
   }
 
+  const syncInputLineNumberScroll = () => {
+    if (lineNumberRef.current && inputRef.current) {
+      lineNumberRef.current.scrollTop = inputRef.current.scrollTop
+    }
+  }
+
   const selectErrorPosition = (position: number | null) => {
     if (position === null) {
       return
@@ -324,8 +336,18 @@ export function JsonToolModal({ onClose }: JsonToolModalProps) {
 
       const start = Math.min(Math.max(position, 0), input.value.length)
       const end = Math.min(start + 1, input.value.length)
+      const location = calculateLocation(input.value, start)
+      const lineHeight = Number.parseFloat(window.getComputedStyle(input).lineHeight)
+
       input.focus()
       input.setSelectionRange(start, end)
+
+      if (location.line !== null && Number.isFinite(lineHeight)) {
+        input.scrollTop = Math.max((location.line - 1) * lineHeight - input.clientHeight / 2 + lineHeight, 0)
+      }
+
+      syncInputLineNumberScroll()
+      window.requestAnimationFrame(syncInputLineNumberScroll)
     }, 0)
   }
 
@@ -411,12 +433,18 @@ export function JsonToolModal({ onClose }: JsonToolModalProps) {
     }
     setJsonOutput('')
     setErrorDetail(null)
+    setInputLineCount(1)
     clearToast()
   }
 
   const handleInputChange = () => {
+    setInputLineCount(countInputLines(inputRef.current?.value ?? ''))
     setErrorDetail(null)
     clearToast()
+  }
+
+  const handleInputScroll = () => {
+    syncInputLineNumberScroll()
   }
 
   const errorDetailId = errorDetail ? 'json-error-detail' : undefined
@@ -483,15 +511,29 @@ export function JsonToolModal({ onClose }: JsonToolModalProps) {
                 <p id="json-input-title" className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">Input</p>
               </div>
               <label className="flex flex-1 flex-col gap-2 overflow-hidden text-sm font-bold text-slate-500">
-                <textarea
-                  ref={inputRef}
-                  onChange={handleInputChange}
-                  aria-describedby={errorDetailId}
-                  aria-invalid={errorDetail ? 'true' : undefined}
-                  placeholder={'例如：{"name":"demo","enabled":true}'}
-                  className="focus-ring min-h-0 flex-1 resize-none overflow-auto rounded-[1.35rem] border border-white/10 bg-slate-950/80 px-5 py-4 font-mono text-sm font-semibold leading-6 text-slate-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06),0_16px_42px_-34px_rgb(34_211_238/0.65)] transition-all duration-200 placeholder:text-slate-600 hover:border-cyan-300/40 focus:border-cyan-300/50 focus:outline-none focus:ring-4 focus:ring-cyan-300/15"
-                  spellCheck={false}
-                />
+                <div className="focus-within:ring-cyan-300/15 flex min-h-0 flex-1 overflow-hidden rounded-[1.35rem] border border-white/10 bg-slate-950/80 shadow-[inset_0_1px_0_rgb(255_255_255/0.06),0_16px_42px_-34px_rgb(34_211_238/0.65)] transition-all duration-200 hover:border-cyan-300/40 focus-within:border-cyan-300/50 focus-within:ring-4">
+                  <div
+                    ref={lineNumberRef}
+                    className="min-h-0 w-14 shrink-0 select-none overflow-hidden border-r border-white/10 px-3 py-4 text-right font-mono text-sm font-semibold leading-[20px] text-slate-600"
+                    aria-hidden="true"
+                  >
+                    {Array.from({ length: inputLineCount }, (_, index) => (
+                      <div key={index}>{index + 1}</div>
+                    ))}
+                  </div>
+                  <textarea
+                    ref={inputRef}
+                    onChange={handleInputChange}
+                    onScroll={handleInputScroll}
+                    aria-describedby={errorDetailId}
+                    aria-invalid={errorDetail ? 'true' : undefined}
+                    aria-label="JSON 输入"
+                    placeholder={'例如：{"name":"demo","enabled":true}'}
+                    wrap="off"
+                    className="min-h-0 flex-1 resize-none overflow-auto bg-transparent px-5 py-4 font-mono text-sm font-semibold leading-[20px] text-slate-100 outline-none transition-all duration-200 placeholder:text-slate-600"
+                    spellCheck={false}
+                  />
+                </div>
               </label>
 
               <div className="grid flex-none gap-2">
