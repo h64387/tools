@@ -25,7 +25,7 @@ export const tools: Tool[] = [
     name: 'Base64 工具',
     slug: 'base64',
     path: '/tools/base64',
-    description: 'Base64 编码解码相关工具占位页',
+    description: '文本与 Base64 双向转换，支持中文与异常提示',
     keywords: ['base64', '编码', '解码', 'encode', 'decode'],
   },
   {

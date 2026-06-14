@@ -391,14 +391,12 @@ export function Md5ToolModal({ onClose }: Md5ToolModalProps) {
           </div>
 
           <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_0.85fr]">
-            <section className="grid gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-[0_20px_60px_-48px_rgb(0_0_0/0.95)]" aria-labelledby="md5-input-title">
+            <section className="grid gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 shadow-[0_20px_60px_-48px_rgb(0_0_0/0.95)]" aria-label="MD5 文本输入">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-300">Input</p>
-                <h3 id="md5-input-title" className="mt-2 text-xl font-black text-white">待加密文本</h3>
               </div>
 
-              <label className="grid gap-2 text-sm font-bold text-slate-500">
-                文本输入
+              <label className="grid text-sm font-bold text-slate-500">
                 <textarea
                   value={inputText}
                   onChange={(event) => {
@@ -407,7 +405,7 @@ export function Md5ToolModal({ onClose }: Md5ToolModalProps) {
                     clearToast()
                   }}
                   placeholder="输入任意文本，例如：hello"
-                  className="focus-ring min-h-56 resize-y rounded-[1.35rem] border border-white/10 bg-slate-950/80 px-5 py-4 font-mono text-sm font-semibold leading-6 text-slate-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06),0_16px_42px_-34px_rgb(34_211_238/0.65)] transition-all duration-200 placeholder:text-slate-600 hover:border-cyan-300/40 focus:border-cyan-300/50 focus:outline-none focus:ring-4 focus:ring-cyan-300/15"
+                  className="focus-ring min-h-64 resize-y rounded-[1.35rem] border border-white/10 bg-slate-950/80 px-5 py-4 font-mono text-sm font-semibold leading-6 text-slate-100 shadow-[inset_0_1px_0_rgb(255_255_255/0.06),0_16px_42px_-34px_rgb(34_211_238/0.65)] transition-all duration-200 placeholder:text-slate-600 hover:border-cyan-300/40 focus:border-cyan-300/50 focus:outline-none focus:ring-4 focus:ring-cyan-300/15"
                   spellCheck={false}
                 />
               </label>

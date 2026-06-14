@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Base64ToolModal } from '../components/Base64ToolModal'
 import { DateTimeToolModal } from '../components/DateTimeToolModal'
 import { JsonToolModal } from '../components/JsonToolModal'
 import { Md5ToolModal } from '../components/Md5ToolModal'
@@ -10,6 +11,7 @@ export function HomePage() {
   const [query, setQuery] = useState('')
   const [isDateTimeToolOpen, setIsDateTimeToolOpen] = useState(false)
   const [isMd5ToolOpen, setIsMd5ToolOpen] = useState(false)
+  const [isBase64ToolOpen, setIsBase64ToolOpen] = useState(false)
   const [isJsonToolOpen, setIsJsonToolOpen] = useState(false)
 
   const filteredTools = useMemo(() => {
@@ -54,9 +56,9 @@ export function HomePage() {
                 <h1 id="tool-list-title" className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
                   八方来财
                 </h1>
-                <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400">
-                  搜索工具、打开面板、完成转换都在浏览器内进行。无需账号、无需后端，常用格式处理随手可用。
-                </p>
+                <pre className="mt-5 overflow-hidden font-mono text-sm font-black leading-5 tracking-[0.16em] text-slate-200/85 sm:text-base sm:leading-6" aria-label="本地工具状态图形">
+                  {'+-- LOCAL TOOL MATRIX ------------------------+\n|  DATE     #######..  ready                  |\n|  JSON     #########  armed                  |\n|  MD5      ######...  local                  |\n|  BASE64   ######...  local                  |\n+------------------------ browser only -------+'}
+                </pre>
               </div>
               <SearchInput value={query} onChange={setQuery} />
             </div>
@@ -77,9 +79,11 @@ export function HomePage() {
                         ? () => setIsDateTimeToolOpen(true)
                         : tool.slug === 'md5'
                           ? () => setIsMd5ToolOpen(true)
-                          : tool.slug === 'json'
-                            ? () => setIsJsonToolOpen(true)
-                            : undefined
+                          : tool.slug === 'base64'
+                            ? () => setIsBase64ToolOpen(true)
+                            : tool.slug === 'json'
+                              ? () => setIsJsonToolOpen(true)
+                              : undefined
 
                       return <ToolCard key={tool.slug} tool={tool} onOpen={openTool} />
                     })}
@@ -117,6 +121,7 @@ export function HomePage() {
 
       {isDateTimeToolOpen && <DateTimeToolModal onClose={() => setIsDateTimeToolOpen(false)} />}
       {isMd5ToolOpen && <Md5ToolModal onClose={() => setIsMd5ToolOpen(false)} />}
+      {isBase64ToolOpen && <Base64ToolModal onClose={() => setIsBase64ToolOpen(false)} />}
       {isJsonToolOpen && <JsonToolModal onClose={() => setIsJsonToolOpen(false)} />}
     </div>
   )
