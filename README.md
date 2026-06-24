@@ -1,6 +1,6 @@
 # 本地工具箱首页
 
-React、Vite、TypeScript、Tailwind CSS v4 与 React Router 构建的本地工具箱首页。当前包含首页、四个工具入口、工具占位路由与 404 页面；日期时间和 JSON 已提供首页弹窗工具体验。
+React、Vite、TypeScript、Tailwind CSS v4 与 React Router 构建的本地工具箱首页。当前包含首页、五个工具入口、工具路由与 404 页面。
 
 ## 已确认工具
 
@@ -8,6 +8,7 @@ React、Vite、TypeScript、Tailwind CSS v4 与 React Router 构建的本地工�
 - MD5 工具：`/tools/md5`
 - Base64 工具：`/tools/base64`
 - JSON 工具：`/tools/json`（首页卡片打开弹窗，支持格式化、压缩、校验与复制）
+- 翻译工具：`/tools/translate`（通过浏览器侧 OpenAI 兼容 LLM 调用；`/config/llm.json` 属于静态公开配置，不要把可用公开 API Key 直接暴露在面向公网的站点中）
 
 ## 命令
 
@@ -23,6 +24,8 @@ npm run preview
 ## 开发说明
 
 - 首页搜索为本地客户端过滤，会匹配工具名称、说明与关键词。
-- JSON 工具从首页卡片打开弹窗；`/tools/json` 直达路由保留为导航占位提示。
-- MD5 和 Base64 仍为占位工具，不提供实际处理能力。
+- 日期时间、MD5、Base64、JSON 与翻译工具均从首页卡片打开弹窗处理。
+- 翻译工具通过浏览器侧 OpenAI 兼容 LLM 调用完成，请求生产配置读取自 `/config/llm.json`。
+- 本地开发可复制 `.env.example` 为 `.env.local`，并填写 `VITE_DEEPSEEK_API_KEY`。
+- `/config/llm.json` 会作为静态资源暴露给所有可访问站点的浏览器用户；该方案仅适合个人、内网或受访问控制的私有部署，公开服务应改用后端代理或受限 Key。
 - 当前范围不包含后端、持久化、测试框架或额外工具入口。

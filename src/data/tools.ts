@@ -35,4 +35,11 @@ export const tools: Tool[] = [
     description: 'JSON 格式化、压缩与校验工具',
     keywords: ['json', '格式化', '压缩', '校验', 'format', 'validate'],
   },
+  {
+    name: '翻译工具',
+    slug: 'translate',
+    path: '/tools/translate',
+    description: '使用已配置的 LLM 模型完成中文与英文互译',
+    keywords: ['翻译', '中文', '英文', 'translate', 'translation', 'llm'],
+  },
 ]
